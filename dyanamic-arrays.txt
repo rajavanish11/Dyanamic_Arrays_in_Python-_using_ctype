@@ -1,0 +1,119 @@
+#dyanamic-arrays in python  using ctype
+# 1. Append
+# 2. len/print
+# 3. insert
+# 4. delete
+# 5. indexing
+# 6. remove
+# 7. pop/clear
+# 8. find
+
+import ctypes
+import sys
+
+class MyList:
+
+  def __init__(self):
+
+    self.size = 1
+    self.n = 0
+    # create a c type array of size = size
+    self.A = self.__make_array(self.size)
+
+  def __len__(self):
+    return self.n
+
+  def __getitem__(self,index):
+
+    if 0<=index<self.n:
+      # return answer
+      return self.A[index]
+    else:
+      print("IndexError")
+
+
+  def __str__(self):
+
+    res = ""
+
+    for i in range(self.n):
+      res = res + str(self.A[i]) + ","
+
+    return "[" + res[:-1] + "]"
+
+  def __delitem__(self,index):
+
+    if 0<=index<self.n:
+
+      for i in range(index,self.n-1):
+        self.A[i] = self.A[i+1]
+
+      self.n-=1
+    else:
+      print("IndexError")
+
+
+  def append(self,item):
+
+    if self.n == self.size:
+      self.__resize(2 * self.size)
+
+    self.A[self.n] = item
+    self.n+=1
+
+  def pop(self):
+    print(self.A[self.n-1])
+    self.n-=1
+
+  def clear(self):
+    self.n=0
+    self.size=1
+
+  def find(self,item):
+
+    flag = False
+    for i in range(self.n):
+      if self.A[i] == item:
+        flag = True
+        break
+
+    if flag:
+      print(i)
+    else:
+      print("Not found")
+
+  def insert(self,item,pos):
+
+    if self.n == self.size:
+      self.__resize(2*self.size)
+
+    # insert logic
+    for i in range(self.n-1,pos-1,-1):
+
+      self.A[i+1] = self.A[i]
+
+    self.A[pos] = item
+    self.n+=1
+
+  def remove(self,value):
+
+    for i in range(self.n):
+
+      if self.A[i] == value:
+        return self.__delitem__(i)
+    
+    return "Not found"
+
+  def __resize(self,new_capacity):
+
+    B = self.__make_array(new_capacity)
+    self.size = new_capacity
+
+    for i in range(self.n):
+      B[i] = self.A[i]
+
+    self.A = B
+
+  def __make_array(self,capacity):
+
+    return (capacity * ctypes.py_object)()
